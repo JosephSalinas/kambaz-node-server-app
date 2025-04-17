@@ -1,37 +1,36 @@
 import * as assignmentsDao from "./dao.js";
 
 export default function AssignmentRoutes(app) {
-  app.get("/api/courses/:courseId/assignments", (req, res) => {
+  app.get("/api/courses/:courseId/assignments", async (req, res) => {
     const { courseId } = req.params;
-    const assignments = assignmentsDao.findAssignmentsForCourse(courseId);
+    const assignments = await assignmentsDao.findAssignmentsForCourse(courseId);
     res.json(assignments);
-    console.log("Fetched assignments")
+    console.log("Fetched assignments");
   });
 
-  app.post("/api/courses/:courseId/assignments", (req, res) => {
+  app.post("/api/courses/:courseId/assignments", async (req, res) => {
     const { courseId } = req.params;
-    const newAssignment = assignmentsDao.createAssignment(courseId, req.body);
+    const newAssignment = await assignmentsDao.createAssignment(courseId, req.body);
     res.json(newAssignment);
-    console.log("Added assignments")
+    console.log("Added assignment");
   });
 
-  app.delete("/api/assignments/:assignmentId", (req, res) => {
+  app.delete("/api/assignments/:assignmentId", async (req, res) => {
     const { assignmentId } = req.params;
-    const result = assignmentsDao.deleteAssignment(assignmentId);
+    const result = await assignmentsDao.deleteAssignment(assignmentId);
     res.json(result);
-    console.log("Deleted assignments")
-
+    console.log("Deleted assignment");
   });
 
-  app.put("/api/assignments/:assignmentId", (req, res) => {
+  app.put("/api/assignments/:assignmentId", async (req, res) => {
     const { assignmentId } = req.params;
-    const updated = assignmentsDao.updateAssignment(assignmentId, req.body);
-    if (updated) {
-      res.json(updated);
-      console.log("Updated assignments")
+    const updated = await assignmentsDao.updateAssignment(assignmentId, req.body);
+    if (updated.modifiedCount > 0) {
+      res.json({ status: "updated" });
+      console.log("Updated assignment");
     } else {
       res.status(404).send("Assignment not found");
-      console.log("No assignment to update")
+      console.log("No assignment to update");
     }
   });
 }
