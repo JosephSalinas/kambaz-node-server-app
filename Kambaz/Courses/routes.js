@@ -26,23 +26,6 @@ export default function CourseRoutes(app) {
         res.send(status);
     });
 
-    app.get("/api/courses", async (req, res) => {
-        const userId = req.query.user;
-        const courses = await dao.findAllCourses();
-
-        if (userId) {
-            const userEnrollments = enrollmentsDao.findEnrollmentsByUser(userId);
-            const enrolledCourseIds = userEnrollments.map((e) => e.course);
-            const enrichedCourses = courses.map((course) => ({
-                ...course,
-                enrolled: enrolledCourseIds.includes(course._id),
-            }));
-            res.json(enrichedCourses);
-        } else {
-            res.json(courses);
-        }
-    });
-
     app.delete("/api/courses/:courseId", async (req, res) => {
         const { courseId } = req.params;
         const status = await dao.deleteCourse(courseId);
