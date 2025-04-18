@@ -55,6 +55,11 @@ export default function CourseRoutes(app) {
     });
     app.get("/api/users/:userId/courses", findCoursesForEnrolledUser);
 
+    app.get("/api/courses", async (req, res) => {
+        const courses = await dao.findAllCourses();
+        res.send(courses);
+      });
+
     app.post("/api/courses", async (req, res) => {
         const course = await dao.createCourse(req.body);
         const currentUser = req.session["currentUser"];
