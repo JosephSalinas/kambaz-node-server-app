@@ -1,5 +1,5 @@
 import * as dao from "./dao.js";
-import * as attemptsDao from "./attempts/dao.js";
+import * as attemptsDao from "./Attempts/dao.js";
 
 export default function QuizRoutes(app) {
     // everything for quizzes. Note: implement passcode locally!
