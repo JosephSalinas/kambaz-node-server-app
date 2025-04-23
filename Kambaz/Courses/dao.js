@@ -10,11 +10,12 @@ export async function findAllCourses(userId = null) {
             user: userId,
             status: "ENROLLED"
         });
-        const enrolledCourseIds = new Set(enrollments.map(e => e.course));
 
+        const enrolledCourseIds = new Set(enrollments.map(e => e.course));
+        
         return courses.map(course => ({
             ...course.toObject(),
-            enrolled: enrolledCourseIds.has(course._id)
+            enrolled: enrolledCourseIds.has(course._id.toString())
         }));
     }
     
@@ -28,7 +29,9 @@ export async function findCoursesForEnrolledUser(userId) {
     });
     
     const enrolledCourseIds = enrollments.map(e => e.course);
-    const enrolledCourses = await model.find({ _id: { $in: enrolledCourseIds } });
+    const enrolledCourses = await model.find({ 
+        _id: { $in: enrolledCourseIds }
+    });
     
     return enrolledCourses.map(course => ({
         ...course.toObject(),
